@@ -1,8 +1,10 @@
+# https://codeforces.com/problemset/problem/2106/F
+
 def solve():
     length = int(input())
     word = list(input())
     word = [int(word[i]) for i in range(length)]
-    counter = []
+    counter = []    # 记录从上至下的各段面积, 从左往右遍历过程中, 两段的连接位置是确定的, 无需记录
     ans = 0
     for i in range(length):
         num = word[i]
