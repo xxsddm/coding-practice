@@ -3,7 +3,7 @@
 using namespace std;
 
 template <typename T>
-class BinaryIndexedTree {
+class BinaryIndexTree { // tree[i]包含[i - lowbit(i) + 1, i]信息
 public:
     vector<T> tree{};
     int size{};
