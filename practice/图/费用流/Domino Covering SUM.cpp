@@ -1,3 +1,6 @@
+// https://atcoder.jp/contests/abc407/tasks/abc407_g
+
+#include <iostream>
 #include <vector>
 #include <queue>
 
@@ -115,3 +118,74 @@ public:
         }
     }
 };
+
+int main() {
+    int H, W;
+    scanf("%d %d", &H, &W);
+    int start = H * W, end = start + 1, length = end + 1;
+    MinCostFlow calculator = MinCostFlow(start, end, length);
+    vector<vector<ll>> nums;
+    nums.reserve(H);
+    ll ans = 0;
+    for (int i = 0; i < H; ++i) {
+        vector<ll> container;
+        container.reserve(W);
+        for (int j = 0; j < W; ++j) {
+            ll num;
+            scanf("%lld", &num);
+            container.push_back(num);
+            ans += num;
+        }
+        nums.push_back(std::move(container));
+    }
+    for (int i = 0; i < H - 1; ++i) {
+        for (int j = 0; j < W; ++j) {
+            ll num1 = nums[i][j], num2 = nums[i + 1][j];
+            ll temp = num1 + num2;
+            if (temp >= 0) {
+                continue;
+            }
+            int idx1 = i * W + j, idx2 = idx1 + W;
+            if ((i + j) & 1) {
+                calculator.addEdge(idx1, idx2, 1, temp);
+            } else {
+                calculator.addEdge(idx2, idx1, 1, temp);
+            }
+        }
+    }
+    for (int i = 0; i < H; ++i) {
+        for (int j = 0; j < W - 1; ++j) {
+            ll num1 = nums[i][j], num2 = nums[i][j + 1];
+            ll temp = num1 + num2;
+            if (temp >= 0) {
+                continue;
+            }
+            int idx1 = i * W + j, idx2 = idx1 + 1;
+            if ((i + j) & 1) {
+                calculator.addEdge(idx1, idx2, 1, temp);
+            } else {
+                calculator.addEdge(idx2, idx1, 1, temp);
+            }
+        }
+    }
+    for (int i = 0; i < H; ++i) {
+        for (int j = 0; j < W; ++j) {
+            int idx = i * W + j;
+            if ((i + j) & 1) {  // 方格邻点冲突技巧
+                calculator.addEdge(start, idx, 1, 0);
+            } else {
+                calculator.addEdge(idx, end, 1, 0);
+            }
+        }
+    }
+    ll minCost = 0;
+    for (int i = 0; i < length; ++i) {
+        calculator.calculate(1);    // 不断注入流量(不确定最小费用对应流量), 找到最小的移除值
+        if (calculator.minCost >= minCost) {
+            break;
+        }
+        minCost = calculator.minCost;
+    }
+    printf("%lld", ans - minCost);
+    return 0;
+}

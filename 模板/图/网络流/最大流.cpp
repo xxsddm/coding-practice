@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 #include <queue>
 
@@ -105,17 +104,3 @@ public:
         }
     }
 };
-
-int main() {
-    int n, m, s, t;
-    scanf("%d %d %d %d", &n, &m, &s, &t);
-    MaxFlow calculator = MaxFlow(s, t, n + 1);
-    for (int i = 0; i < m; ++i) {
-        int u, v, w;
-        scanf("%d %d %d", &u, &v, &w);
-        calculator.addEdge(u, v, w);
-    }
-    calculator.calculate((long long) 1 << 50);
-    printf("%lld", calculator.maxFlow);
-    return 0;
-}
